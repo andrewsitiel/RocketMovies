@@ -1,3 +1,5 @@
+require("express-async-errors");
+
 const express = require("express");
 const app = express();
 const routes = require("./src/routes/index")
@@ -10,7 +12,7 @@ app.use(routes);
 app.use((error, request, response, next) => {
   if(error instanceof AppError) {
     return response.status(error.status).json({
-      status: "error",
+      error: "error",
       message: error.message
     })
   };

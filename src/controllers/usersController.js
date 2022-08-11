@@ -3,7 +3,7 @@ const { hash } = require("bcrypt");
 
 class UsersController { 
   async create (request, response) {
-    const {name, email, password} = request.bod
+    const {name, email, password} = request.body
 
     const hashedPassword = await hash(password, 8);
     
