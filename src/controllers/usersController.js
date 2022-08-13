@@ -2,6 +2,15 @@ const knex = require("../database/knex/index");
 const { hash, compare } = require("bcrypt");
 
 class UsersController { 
+
+  async show (request, response) {
+    const { id } = request.params;
+
+    const user = await knex("users").where({ id }).select("name", "email", "updated_at").first();
+
+    return response.status(200).json(user);
+  }
+
   async create (request, response) {
     const {name, email, password} = request.body
 
@@ -36,7 +45,7 @@ class UsersController {
     await knex("users").where({id}).update({name, email, password: hashedPassword, updated_at});
 
     return response.status(200).json();
-  }
+  };
 
   async delete (request, response) {
     const { id } = request.params;
@@ -44,7 +53,7 @@ class UsersController {
     await knex("users").where({id}).delete();
 
     return response.status(200).json("Usuário deletado.");
-  }
+  };
 }
 
 module.exports= UsersController;
