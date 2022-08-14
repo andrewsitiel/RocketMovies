@@ -3,14 +3,6 @@ const { hash, compare } = require("bcrypt");
 
 class UsersController { 
 
-  async show (request, response) {
-    const { id } = request.params;
-
-    const user = await knex("users").where({ id }).select("name", "email", "updated_at").first();
-
-    return response.status(200).json(user);
-  }
-
   async create (request, response) {
     const {name, email, password} = request.body
 
@@ -20,6 +12,14 @@ class UsersController {
 
     return response.status(200).json("Usuário criado!");
   };
+
+  async show (request, response) {
+    const { id } = request.params;
+
+    const user = await knex("users").where({ id }).select("name", "email", "updated_at").first();
+
+    return response.status(200).json(user);
+  }
 
   async update (request, response) {
     const { id } = request.params;
