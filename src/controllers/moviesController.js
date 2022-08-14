@@ -2,24 +2,98 @@ const knex = require("../database/knex/index");
 class MoviesController {
 
   async index (request, response) {
-    const { user_id } = request.query;
+    const { user_id, title, tags } = request.query;
 
-    const allUserMovies = await knex("movies")
-    .where({ user_id })
+    let allUserMovies
+    
+    if(tags && title) 
+      {
+        const movieTags = tags.split(",").map( tag => tag.trim() );
+        
+        allUserMovies = await knex("movie_tags")
+
+        .innerJoin("movies","movies.id", "movie_tags.movie_id")
+        
+        .select("movies.id", "movies.title", "movies.description", "movies.rating")
+        
+        .where("movies.user_id", user_id )
+        
+        .whereLike("movies.title", `%${title}%`)
+
+        .whereIn("name", movieTags)
+        
+        .orderBy("created_at");
+
+        const moviesTags = await knex("movie_tags")
+        .where({user_id})
+        .orderBy("name");
+
+        const allUserMoviesWithTags = allUserMovies.map(
+          movie => {
+            const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
+            return {
+              ...movie,
+              tags: movieTags.map(tag => tag.name)
+            };
+          });
+
+        return response.status(200).json(allUserMoviesWithTags);
+      }
+
+    if(tags) 
+      {
+        const movieTags = tags.split(",").map( tag => tag.trim() );
+        
+        allUserMovies = await knex("movie_tags")
+
+        .innerJoin("movies","movies.id", "movie_tags.movie_id")
+        
+        .select("movies.id", "movies.title", "movies.description", "movies.rating")
+        
+        .where("movies.user_id", user_id )
+        
+        .whereIn("name", movieTags)
+        
+        .orderBy("created_at");
+
+        const moviesTags = await knex("movie_tags")
+        .where({user_id})
+        .orderBy("name");
+
+        const allUserMoviesWithTags = allUserMovies.map(
+          movie => {
+            console.log(movie)
+            const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
+            return {
+              ...movie,
+              tags: movieTags.map(tag => tag.name)
+            }
+          });
+        return response.status(200).json(allUserMoviesWithTags);
+      }
+
+    if(title) 
+    {
+      allUserMovies = await knex("movie_tags")
+
+      .innerJoin("movies","movies.id", "movie_tags.movie_id")
+      
+      .select("movies.id", "movies.title", "movies.description", "movies.rating")
+      
+      .where("movies.user_id", user_id )
+      
+      .whereLike("movies.title", `%${title}%`)
+      
+      .orderBy("created_at");
+
+      return response.status(200).json(allUserMovies);
+    }
+
+    allUserMovies = await knex("movies")
+    .select("id", "title", "description", "rating")
     .orderBy("created_at");
 
-    const moviesTags = await knex("movie_tags").where({user_id}).orderBy("name")
-
-    const allUserMoviesWithTags = allUserMovies.map(
-      movie => {
-        const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
-        return {
-          ...movie,
-          tags: movieTags.map(tag => tag.name)
-        }
-      });
-
-    return response.status(200).json(allUserMoviesWithTags);
+    return response.status(200).json(allUserMovies);
   };
 
   async create (request, response) {
