@@ -1,12 +1,22 @@
-const knex = require("express");
+const knex = require("../database/knex/index");
 
 class TagsController {
   
   async index (request, response) {
     const { user_id } = request.params;
+    
+    const allMovieTags = await knex("movie_tags").where({user_id}).select("name").orderBy("name");
+  
+    return response.status(200).json(allMovieTags);
+  };
 
-    const allTags = await knex("movie_tags").where({ user_id }).orderBy("name");
+  async delete(request, response) {
+    const { id } = request.params;
 
-    return response.status(200).json(allTags);
+    await knex("movie_tags").where({id}).delete()
+
+    return response.status(200).json("Tag deletada.");
   };
 }
+
+module.exports = TagsController;

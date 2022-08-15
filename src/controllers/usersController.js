@@ -16,7 +16,7 @@ class UsersController {
   async show (request, response) {
     const { id } = request.params;
 
-    const user = await knex("users").where({ id }).select("name", "email", "updated_at").first();
+    const user = await knex("users").where({ id }).first("name", "email", "updated_at");
 
     return response.status(200).json(user);
   }
@@ -25,7 +25,7 @@ class UsersController {
     const { id } = request.params;
     const { name, email, password, old_password } = request.body;
 
-    const userSavedPassword = await knex("users").where({id}).select("password").first(); 
+    const userSavedPassword = await knex("users").where({id}).first("password"); 
     let hashedPassword;
     
     if(password){

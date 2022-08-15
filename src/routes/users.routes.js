@@ -2,11 +2,11 @@ const{ Router } = require("express");
 const userRoutes = Router();
 
 const UsersController = require("../controllers/usersController");Router
-const usersController = new UsersController();
+const controller = new UsersController();
 
-userRoutes.get("/:id", usersController.show);
-userRoutes.post("/", usersController.create);
-userRoutes.put("/:id", usersController.update);
-userRoutes.delete("/:id", usersController.delete);
+userRoutes.get("/:id", controller.show);
+userRoutes.post("/", controller.create);
+userRoutes.put("/:id", controller.update);
+userRoutes.delete("/:id", controller.delete);
 
 module.exports = userRoutes;

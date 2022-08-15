@@ -7,6 +7,6 @@ const tagsRouter = require("./tags.routes");
 
 router.use("/users", userRoutes);
 router.use("/movies", moviesRouter);
-router.use("tags", tagsRouter);
+router.use("/tags", tagsRouter);
 
 module.exports = router;
