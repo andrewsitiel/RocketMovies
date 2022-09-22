@@ -1,6 +1,6 @@
 # RocketMovies
 
-Back-End of an application for management of notes developed with NodeJs and using SQLite3 as SGBD.
+Back-End of an application for personal review of movies with NodeJs and using SQLite as SGBD.
 
 ## Techs
 
