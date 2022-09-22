@@ -14,26 +14,26 @@ Back-End of an application for personal review of movies with NodeJs and using S
 
 The users routes supports *get*, *post*, *put* and *delete* methods:
 
-- ```show``` - needs an id for identify the user.
-- ```put```  - also needs an id for identify the user.
-- ```delete``` - the same of above methods.
+- ```get``` - needs an id for identify the user (params).
+- ```put```  - also needs an id for identify the user (params).
+- ```delete``` - the same of above methods (params).
 - ```post``` - don't requires params, only body data (JSON).
 
 ### /movies
 
 The movies routes supports *get*, *post*, *put* and *delete* methods:
 
-- ```index``` - don't requires params, only body data (JSON) including the user_id.
-- ```show``` -  needs the user's id.
-- ```put```  - needs the movie id.
-- ```delete``` - also require the movie id.
+- ```get```(index) - don't requires params, only body data (JSON) including the user_id.
 - ```post``` - same as index.
+- ```get``` (show) -  needs the user's id (params).
+- ```put```  - needs the movie id (params).
+- ```delete``` - also require the movie id (params).
 
 ### /tags
 - the tags route supports the *get* and *delete* methods:
 
-- - ```index``` - don't requires params, only body data (JSON) including the user_id.
-- - ```delete``` - also require the movie id.
+- - ```get```(index) - needs the user_id in (params).
+- - ```delete``` - needs tag's id (params).
 
 ## How to use
 
