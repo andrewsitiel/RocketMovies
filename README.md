@@ -32,8 +32,8 @@ The movies routes supports *get*, *post*, *put* and *delete* methods:
 ### /tags
 - the tags route supports the *get* and *delete* methods:
 
-- - ```get```(index) - needs the user_id in (params).
-- - ```delete``` - needs tag's id (params).
+- ```get```(index) - needs the user_id in (params).
+- ```delete``` - needs tag's id (params).
 
 ## How to use
 
