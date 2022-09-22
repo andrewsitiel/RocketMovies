@@ -21,16 +21,19 @@ The users routes supports *get*, *post*, *put* and *delete* methods:
 
 ### /movies
 
-The notes routes supports *get*, *post*, *put* and *delete* methods:
+The movies routes supports *get*, *post*, *put* and *delete* methods:
 
-- ```index``` - don't requires params.
+- ```index``` - don't requires params, only body data (JSON) including the user_id.
 - ```show``` -  needs the user's id.
 - ```put```  - needs the movie id.
 - ```delete``` - also require the movie id.
-- ```post``` - don't requires params, only body data (JSON) including the user_id.
+- ```post``` - same as index.
 
 ### /tags
-- the tags route supports the *get* method, to **show** all user registered tags. Needs the user_id for identify the tags.
+- the tags route supports the *get* and *delete* methods:
+
+- - ```index``` - don't requires params, only body data (JSON) including the user_id.
+- - ```delete``` - also require the movie id.
 
 ## How to use
 
