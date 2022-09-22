@@ -23,16 +23,16 @@ The users routes supports *get*, *post*, *put* and *delete* methods:
 
 The movies routes supports *get*, *post*, *put* and *delete* methods:
 
-- ```get```(index) - don't requires params, only body data (JSON) including the user_id.
+- ```get``` (index) - don't requires params, only body data (JSON) including the user_id.
 - ```post``` - same as index.
 - ```get``` (show) -  needs the user's id (params).
 - ```put```  - needs the movie id (params).
 - ```delete``` - also require the movie id (params).
 
 ### /tags
-- the tags route supports the *get* and *delete* methods:
+ The tags route supports the *get* and *delete* methods:
 
-- ```get```(index) - needs the user_id in (params).
+- ```get``` (index) - needs the user_id in (params).
 - ```delete``` - needs tag's id (params).
 
 ## How to use
