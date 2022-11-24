@@ -9,18 +9,18 @@ const authConfig = require("../config/jwt");
 class Access {
 
   async create( request, response ) {
-    const {email , password} = request.body;
+    const { email , password } = request.body;
 
     const user = await knex("users").where({email}).first();
 
     if(!user) {
-      throw new AppError("Credenciais inválidas");
+      throw new AppError("Credenciais inválidas", 401);
     }
 
     const checkPassword = await compare(password, user.password);
 
     if(!checkPassword) {
-      throw new AppError("Credenciais inválidas");
+      throw new AppError("Credenciais inválidas", 401);
     }
 
     const {secret, expiresIn} = authConfig.jwt;
@@ -30,7 +30,7 @@ class Access {
       expiresIn
     })
 
-    return response.status(200).json({user, token})
+    return response.json({user, token})
   } 
 
 }
