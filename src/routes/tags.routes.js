@@ -3,8 +3,9 @@ const tagsRouter = Router();
 
 const TagsController = require("../controllers/tagsController");
 const controller = new TagsController();
+const ensureAuthenticated = require("../middleware/ensureAuthenticated");
 
-tagsRouter.get("/:user_id", controller.index);
-tagsRouter.delete("/:id", controller.delete);
+tagsRouter.get("/", ensureAuthenticated, controller.index);
+tagsRouter.delete("/:id", ensureAuthenticated, controller.delete);
 
 module.exports = tagsRouter;

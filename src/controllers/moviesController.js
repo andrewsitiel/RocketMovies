@@ -2,7 +2,8 @@ const knex = require("../database/knex/index");
 class MoviesController {
 
   async index (request, response) {
-    const { user_id, title, tags } = request.query;
+    const { title, tags } = request.query;
+    const user_id = request.user.id;
 
     let allUserMovies
     
@@ -98,7 +99,8 @@ class MoviesController {
 
   async create (request, response) {
 
-    const { title, description, rating, user_id, tags } = request.body;
+    const { title, description, rating, tags } = request.body;
+    const user_id = request.user.id;
 
     const invalidRate = Number(rating) > 5 || Number(rating) < 0;
 
@@ -129,14 +131,14 @@ class MoviesController {
   };
 
   async show (request, response) {
-    const { id } = request.params;
+    const { movie_id } = request.params;
 
     const movie = await knex("movies")
-    .where({ id })
+    .where({ movie_id })
     .first("title", "description", "rating", "created_at", "updated_at");
 
     const movieTags = await knex("movie_tags")
-    .where({ movie_id: id })
+    .where({ movie_id })
     .select("name")
     .orderBy("name");
 

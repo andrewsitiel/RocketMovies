@@ -8,13 +8,13 @@ class UsersController {
 
     const hashedPassword = await hash(password, 8);
     
-    const user =await knex("users").insert({name, email, password: hashedPassword});
+    await knex("users").insert({name, email, password: hashedPassword});
 
     return response.status(200).json("Usuário criado!");
   };
 
   async show (request, response) {
-    const { id } = request.params;
+    const { id } = request.user;
 
     const user = await knex("users").where({ id }).first("name", "email", "updated_at");
 
@@ -22,7 +22,7 @@ class UsersController {
   }
 
   async update (request, response) {
-    const { id } = request.params;
+    const { id } = request.user;
     const { name, email, password, old_password } = request.body;
 
     const userSavedPassword = await knex("users").where({id}).first("password"); 
@@ -48,7 +48,7 @@ class UsersController {
   };
 
   async delete (request, response) {
-    const { id } = request.params;
+    const { id } = request.user;
 
     await knex("users").where({id}).delete();
 
