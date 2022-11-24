@@ -7,6 +7,8 @@ Back-End of an application for personal review of movies with NodeJs and using S
 - [Express](https://expressjs.com/)
 - [Knex](http://knexjs.org/)
 - [SQLite](https://www.sqlite.org/index.html)
+- [JWT](https://www.jwt.io)
+- [Multer](https://www.npmjs.com/package/multer)
 
 ## Routes
 
@@ -18,7 +20,11 @@ The users routes supports *get*, *post*, *put* and *delete* methods:
 - ```put```  - also needs an id for identify the user (params).
 - ```delete``` - the same of above methods (params).
 - ```post``` - don't requires params, only body data (JSON).
+### /access
 
+The access route support the *post* methods:
+
+- ```get``` - needs email and password for authentication.
 ### /movies
 
 The movies routes supports *get*, *post*, *put* and *delete* methods:
