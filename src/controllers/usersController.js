@@ -1,5 +1,6 @@
 const knex = require("../database/knex/index");
 const { hash, compare } = require("bcrypt");
+const appError = require("../util/appError");
 
 class UsersController { 
 
@@ -27,19 +28,22 @@ class UsersController {
 
     const userSavedPassword = await knex("users").where({id}).first("password"); 
     let hashedPassword;
-    
     if(password){
-      if(!old_password) 
-        { return response.status(200).json("Necessário informar senha antiga.") }
+      if(!old_password) {
+        throw new appError("Necessário informar senha antiga.")
+      }
 
       const checkOldPassword = await compare(old_password, userSavedPassword.password);
       
-      if (checkOldPassword)
-        { hashedPassword = await hash(password, 8) } 
-      else 
-        { return response.status(200).json("A senha antiga está incorreta") };
+      if (checkOldPassword) {
+        hashedPassword = await hash(password, 8)
+      } else {
+        throw new appError("A senha antiga está incorreta")
+      };
     };
 
+    hashedPassword= hashedPassword ?? userSavedPassword.password;
+   
     const updated_at = knex.fn.now();
 
     await knex("users").where({id}).update({name, email, password: hashedPassword, updated_at});

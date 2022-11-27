@@ -91,10 +91,22 @@ class MoviesController {
     }
 
     allUserMovies = await knex("movies")
+    .where({user_id})
     .select("id", "title", "description", "rating")
     .orderBy("created_at");
 
-    return response.status(200).json(allUserMovies);
+    const allUserTags = await knex("movie_tags").where({user_id}).select("id","name", "movie_id");
+
+    const moviesWithTags = allUserMovies.map(movie => {
+      const movie_tags = allUserTags.filter(tag =>  tag.movie_id === movie.id );
+      
+      return {
+        ...movie,
+        tags: movie_tags
+      }
+    });
+
+    return response.status(200).json(moviesWithTags);
   };
 
   async create (request, response) {
@@ -134,17 +146,17 @@ class MoviesController {
     const { movie_id } = request.params;
 
     const movie = await knex("movies")
-    .where({ movie_id })
+    .where({ id: movie_id })
     .first("title", "description", "rating", "created_at", "updated_at");
 
     const movieTags = await knex("movie_tags")
     .where({ movie_id })
-    .select("name")
+    .select("id", "name")
     .orderBy("name");
 
     const movieWithTags = {
       ...movie,
-      tags: movieTags.map( tagName => tagName.name)
+      tags: movieTags
     };
 
     return response.status(200).json(movieWithTags);
