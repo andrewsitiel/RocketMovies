@@ -1,102 +1,103 @@
 const knex = require("../database/knex/index");
+const AppError = require("../util/appError")
 class MoviesController {
 
   async index (request, response) {
-    const { title, tags } = request.query;
+    const { title } = request.query;
     const user_id = request.user.id;
 
-    let allUserMovies
-    
-    if(tags && title) 
-      {
-        const movieTags = tags.split(",").map( tag => tag.trim() );
+    // if(tags.length > 0 && title !== undefined) {
+    //   const movieTags = tags.split(",").map( tag => tag.trim() );
+      
+    //   allUserMovies = await knex("movie_tags")
+
+    //   .innerJoin("movies","movies.id", "movie_tags.movie_id")
+      
+    //   .select("movies.id", "movies.title", "movies.description", "movies.rating")
+      
+    //   .where("movies.user_id", user_id )
+      
+    //   .whereLike("movies.title", `%${title}%`)
+
+    //   .whereIn("name", movieTags)
+      
+    //   .orderBy("created_at");
+
+    //   const moviesTags = await knex("movie_tags")
+    //   .where({user_id})
+    //   .orderBy("name");
+
+    //   const allUserMoviesWithTags = allUserMovies.map(
+    //     movie => {
+    //       const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
+    //       return {
+    //         ...movie,
+    //         tags: movieTags.map(tag => tag.name)
+    //       };
+    //     });
+    //     return response.status(200).json(allUserMoviesWithTags);
+    // }
         
-        allUserMovies = await knex("movie_tags")
+    // if(tags) {
+    //   const movieTags = tags.split(",").map( tag => tag.trim() );
+      
+    //   allUserMovies = await knex("movie_tags")
+      
+    //   .innerJoin("movies","movies.id", "movie_tags.movie_id")
+      
+    //   .select("movies.id", "movies.title", "movies.description", "movies.rating")
+      
+    //   .where("movies.user_id", user_id )
+      
+    //   .whereIn("name", movieTags)
+      
+    //   .orderBy("created_at");
+      
+    //   const moviesTags = await knex("movie_tags")
+    //   .where({user_id})
+    //   .orderBy("name");
+      
+    //   const allUserMoviesWithTags = allUserMovies.map(
+    //     movie => {
+    //       const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
+    //       return {
+    //         ...movie,
+    //         tags: movieTags.map(tag => tag.name)
+    //       }
+    //     });
+    //     return response.status(200).json(allUserMoviesWithTags);
+    // }
 
-        .innerJoin("movies","movies.id", "movie_tags.movie_id")
-        
-        .select("movies.id", "movies.title", "movies.description", "movies.rating")
-        
-        .where("movies.user_id", user_id )
-        
-        .whereLike("movies.title", `%${title}%`)
-
-        .whereIn("name", movieTags)
-        
-        .orderBy("created_at");
-
-        const moviesTags = await knex("movie_tags")
-        .where({user_id})
-        .orderBy("name");
-
-        const allUserMoviesWithTags = allUserMovies.map(
-          movie => {
-            const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
-            return {
-              ...movie,
-              tags: movieTags.map(tag => tag.name)
-            };
-          });
-
-        return response.status(200).json(allUserMoviesWithTags);
-      }
-
-    if(tags) 
-      {
-        const movieTags = tags.split(",").map( tag => tag.trim() );
-        
-        allUserMovies = await knex("movie_tags")
-
-        .innerJoin("movies","movies.id", "movie_tags.movie_id")
-        
-        .select("movies.id", "movies.title", "movies.description", "movies.rating")
-        
-        .where("movies.user_id", user_id )
-        
-        .whereIn("name", movieTags)
-        
-        .orderBy("created_at");
-
-        const moviesTags = await knex("movie_tags")
-        .where({user_id})
-        .orderBy("name");
-
-        const allUserMoviesWithTags = allUserMovies.map(
-          movie => {
-            console.log(movie)
-            const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
-            return {
-              ...movie,
-              tags: movieTags.map(tag => tag.name)
-            }
-          });
-        return response.status(200).json(allUserMoviesWithTags);
-      }
-
-    if(title) 
-    {
-      allUserMovies = await knex("movie_tags")
-
+    if(title) {
+      const allUserMovies = await knex("movie_tags")
       .innerJoin("movies","movies.id", "movie_tags.movie_id")
-      
       .select("movies.id", "movies.title", "movies.description", "movies.rating")
-      
       .where("movies.user_id", user_id )
-      
       .whereLike("movies.title", `%${title}%`)
+      .orderBy("created_at")
+      .groupBy("movies.title");
+
+      const allUserTags = await knex("movie_tags").where({user_id}).select("id","name", "movie_id");
+    
+      const moviesWithTags = allUserMovies.map(movie => {
+        const movie_tags = allUserTags.filter(tag =>  tag.movie_id === movie.id );
+        
+        return {
+          ...movie,
+          tags: movie_tags
+        }
+      });
       
-      .orderBy("created_at");
-
-      return response.status(200).json(allUserMovies);
+      return response.status(200).json(moviesWithTags);
     }
-
-    allUserMovies = await knex("movies")
+    
+    const allUserMovies = await knex("movies")
     .where({user_id})
     .select("id", "title", "description", "rating")
     .orderBy("created_at");
-
+    
     const allUserTags = await knex("movie_tags").where({user_id}).select("id","name", "movie_id");
-
+    
     const moviesWithTags = allUserMovies.map(movie => {
       const movie_tags = allUserTags.filter(tag =>  tag.movie_id === movie.id );
       
@@ -116,17 +117,17 @@ class MoviesController {
 
     const invalidRate = Number(rating) > 5 || Number(rating) < 0;
 
-    if (invalidRate)
-    { return response.status(200).json("Digite uma nota válida") };
+    if (invalidRate) {
+      throw new AppError("Digite uma nota válida")
+    };
     
     const movie_id = await knex("movies").insert( {title, description, rating, user_id} );
-
+    
     const movie = await knex("movies")
     .where({id: movie_id})
     .first("title", "description", "rating", "cover", "created_at");
-
-    if(tags)
-      { 
+    
+    if(tags.length > 0) { 
         const movieTags = tags.map(
           tag => {
             return {
@@ -168,9 +169,10 @@ class MoviesController {
     const { title, description, rating, cover, tags } = request.body;
 
     const invalidRate = Number(rating) > 5 || Number(rating) < 0;
-    
-    if (invalidRate)
-    { return response.status(200).json("Digite uma nota válida") };
+
+    if (invalidRate) { 
+      throw new AppError("Digite uma nota válida")
+    };
 
     await knex("movies")
     .where({id: movie_id})
