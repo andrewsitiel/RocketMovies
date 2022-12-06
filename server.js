@@ -31,5 +31,5 @@ app.use((error, request, response, next) => {
 });
 
 
-const PORT = 3000;
-app.listen(PORT, () => {console.log("It's Running")});
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => {console.log(`It's Running on Port: ${PORT}`)});
