@@ -35,11 +35,10 @@ class UsersController {
 
       const checkOldPassword = await compare(old_password, userSavedPassword.password);
       
-      if (checkOldPassword) {
-        hashedPassword = await hash(password, 8)
-      } else {
-        throw new appError("A senha antiga está incorreta")
-      };
+      if (checkOldPassword === false) {
+        throw new appError("A senha antiga está incorreta")  
+      }
+      hashedPassword = await hash(password, 8)
     };
 
     hashedPassword= hashedPassword ?? userSavedPassword.password;

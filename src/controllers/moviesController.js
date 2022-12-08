@@ -123,7 +123,7 @@ class MoviesController {
     
     const movie_id = await knex("movies").insert( {title, description, rating, user_id} );
     
-    const movie = await knex("movies")
+    await knex("movies")
     .where({id: movie_id})
     .first("title", "description", "rating", "cover", "created_at");
     
@@ -140,7 +140,7 @@ class MoviesController {
         await knex("movie_tags").insert(movieTags);
       }
     
-    return response.status(200).json(movie);
+    return response.status(200).json();
   };
 
   async show (request, response) {
