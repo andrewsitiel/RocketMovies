@@ -28,6 +28,7 @@ class UsersController {
 
     const userSavedPassword = await knex("users").where({id}).first("password"); 
     let hashedPassword;
+
     if(password){
       if(!old_password) {
         throw new appError("Necessário informar senha antiga.")
@@ -38,6 +39,7 @@ class UsersController {
       if (checkOldPassword === false) {
         throw new appError("A senha antiga está incorreta")  
       }
+      
       hashedPassword = await hash(password, 8)
     };
 

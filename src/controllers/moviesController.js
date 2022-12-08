@@ -123,11 +123,7 @@ class MoviesController {
     
     const movie_id = await knex("movies").insert( {title, description, rating, user_id} );
     
-    await knex("movies")
-    .where({id: movie_id})
-    .first("title", "description", "rating", "cover", "created_at");
-    
-    if(tags.length > 0) { 
+    if(tags.length > 0) {
         const movieTags = tags.map(
           tag => {
             return {
