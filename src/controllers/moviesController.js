@@ -6,76 +6,13 @@ class MoviesController {
     const { title } = request.query;
     const user_id = request.user.id;
 
-    // if(tags.length > 0 && title !== undefined) {
-    //   const movieTags = tags.split(",").map( tag => tag.trim() );
-      
-    //   allUserMovies = await knex("movie_tags")
-
-    //   .innerJoin("movies","movies.id", "movie_tags.movie_id")
-      
-    //   .select("movies.id", "movies.title", "movies.description", "movies.rating")
-      
-    //   .where("movies.user_id", user_id )
-      
-    //   .whereLike("movies.title", `%${title}%`)
-
-    //   .whereIn("name", movieTags)
-      
-    //   .orderBy("created_at");
-
-    //   const moviesTags = await knex("movie_tags")
-    //   .where({user_id})
-    //   .orderBy("name");
-
-    //   const allUserMoviesWithTags = allUserMovies.map(
-    //     movie => {
-    //       const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
-    //       return {
-    //         ...movie,
-    //         tags: movieTags.map(tag => tag.name)
-    //       };
-    //     });
-    //     return response.status(200).json(allUserMoviesWithTags);
-    // }
-        
-    // if(tags) {
-    //   const movieTags = tags.split(",").map( tag => tag.trim() );
-      
-    //   allUserMovies = await knex("movie_tags")
-      
-    //   .innerJoin("movies","movies.id", "movie_tags.movie_id")
-      
-    //   .select("movies.id", "movies.title", "movies.description", "movies.rating")
-      
-    //   .where("movies.user_id", user_id )
-      
-    //   .whereIn("name", movieTags)
-      
-    //   .orderBy("created_at");
-      
-    //   const moviesTags = await knex("movie_tags")
-    //   .where({user_id})
-    //   .orderBy("name");
-      
-    //   const allUserMoviesWithTags = allUserMovies.map(
-    //     movie => {
-    //       const movieTags = moviesTags.filter(tag => tag.movie_id === movie.id);
-    //       return {
-    //         ...movie,
-    //         tags: movieTags.map(tag => tag.name)
-    //       }
-    //     });
-    //     return response.status(200).json(allUserMoviesWithTags);
-    // }
-
     if(title) {
-      const allUserMovies = await knex("movie_tags")
-      .innerJoin("movies","movies.id", "movie_tags.movie_id")
-      .select("movies.id", "movies.title", "movies.description", "movies.rating")
-      .where("movies.user_id", user_id )
-      .whereLike("movies.title", `%${title}%`)
+      const allUserMovies = await knex("movies")
+      .select("id", "title", "description", "rating")
+      .where("user_id", user_id )
+      .whereLike("title", `%${title}%`)
       .orderBy("created_at")
-      .groupBy("movies.title");
+      .groupBy("title");
 
       const allUserTags = await knex("movie_tags").where({user_id}).select("id","name", "movie_id");
     
