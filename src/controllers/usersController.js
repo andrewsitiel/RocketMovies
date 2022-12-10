@@ -31,13 +31,13 @@ class UsersController {
 
     if(password){
       if(!old_password) {
-        throw new appError("Necessário informar senha antiga.")
+        throw new appError("Necessário informar a senha atual.")
       }
 
       const checkOldPassword = await compare(old_password, userSavedPassword.password);
       
       if (checkOldPassword === false) {
-        throw new appError("A senha antiga está incorreta")  
+        throw new appError("A senha atual está incorreta.")  
       }
       
       hashedPassword = await hash(password, 8)
@@ -49,7 +49,7 @@ class UsersController {
 
     await knex("users").where({id}).update({name, email, password: hashedPassword, updated_at});
 
-    return response.status(200).json();
+    return response.status(200).json("Usuário atualizado com sucesso!");
   };
 
   async delete (request, response) {
