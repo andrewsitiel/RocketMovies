@@ -2,14 +2,18 @@ const knex = require("../database/knex/index");
 const { hash, compare } = require("bcrypt");
 const appError = require("../util/appError");
 
+const CreateUserService  = require("../services/userService/CreateUserService");
+const UserRepository = require("../repositories/UserRepository");
+
 class UsersController { 
 
   async create (request, response) {
     const {name, email, password} = request.body
-
-    const hashedPassword = await hash(password, 8);
     
-    await knex("users").insert({name, email, password: hashedPassword});
+    const userRepository = new UserRepository();
+    const userService= new CreateUserService(userRepository);
+    
+    await userService.create({name, email, password});
 
     return response.status(200).json("Usuário criado!");
   };
