@@ -45,4 +45,19 @@ describe("User services", () => {
     // await expect(UserService.create(user02)).rejects.toEqual(new appError("teste"));
   })
 
+  it("User's new password must be equal to current password", async () => {
+    const updatedUser = {
+      id: 1,
+      name: "Rafael Test",
+      email: "email@email.com",
+      password: "abc",
+      old_password: "1234", // correct password = "123"
+    }
+    
+    expect(async () =>{ 
+      await UserService.update(updatedUser)
+    }).rejects.toEqual(new appError("A senha atual está incorreta."));
+    
+  })
+
 }) 

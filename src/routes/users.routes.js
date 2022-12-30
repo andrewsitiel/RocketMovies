@@ -13,7 +13,6 @@ const multer = require("multer");
 const uploadConfig = require("../config/upload");
 const upload = multer(uploadConfig.MULTER);
 
-userRoutes.get("/", ensureAuthenticated, controller.show);
 userRoutes.post("/", controller.create);
 userRoutes.put("/", ensureAuthenticated, controller.update);
 userRoutes.patch("/avatar", ensureAuthenticated, upload.single("avatar"), avatarController.update);

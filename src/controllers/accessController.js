@@ -10,7 +10,7 @@ class Access {
 
   async create( request, response ) {
     const { email , password } = request.body;
-
+    
     const user = await knex("users").where({email}).first();
 
     if(!user) {
